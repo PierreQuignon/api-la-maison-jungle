@@ -13,12 +13,12 @@ app.use(express.json());
 app.post("/plants", async (req, res) => {
   try {
     const { name } = req.body;
-    const newPlant = await pool.query("INSERT INTO plant (name) VALUES($1)", [
+    const newPlant = await pool.query("INSERT INTO plant (name) VALUES($1) RETURNING *", [
       name,
     ]);
-    res.json(newPlant);
+    res.json(newPlant.rows[0]);
   } catch (error) {
-    console.error(err.message);
+    console.error(error.message);
   }
 });
 
