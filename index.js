@@ -23,6 +23,14 @@ app.post("/plants", async (req, res) => {
 });
 
 //get all plants
+app.get("/plants", async (req, res) => {
+  try {
+    const allPlants = await pool.query("SELECT * FROM plant");
+    res.json(allPlants.rows);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
 
 //get a plant
 
