@@ -12,10 +12,10 @@ app.use(express.json());
 //create plant
 app.post("/plants", async (req, res) => {
   try {
-    const { name, water } = req.body;
+    const { name, water, cover } = req.body;
     const newPlant = await pool.query(
-      "INSERT INTO plant (name, water) VALUES($1, $2) RETURNING *",
-      [name, water]
+      "INSERT INTO plant (name, water, cover) VALUES ($1, $2, $3) RETURNING *",
+      [name, water, cover]
     );
     res.json(newPlant.rows[0]);
   } catch (error) {
@@ -51,12 +51,12 @@ app.get("/plants/:id", async (req, res) => {
 app.put("/plants/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, water } = req.body;
-    const updtatePlant = await pool.query(
-      "UPDATE plant SET name = $1, water = $2 WHERE plant_id = $3",
-      [name, water, id]
+    const { name, water, cover } = req.body;
+    const updatePlant = await pool.query(
+      "UPDATE plant SET name = $1, water = $2, cover = $3 WHERE plant_id = $4",
+      [name, water, cover, id]
     );
-    res.json("the plant was updated with succes !");
+    res.json("the plant was updated with success !");
   } catch (error) {
     console.error(error.message);
   }
