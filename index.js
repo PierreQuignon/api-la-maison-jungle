@@ -7,7 +7,7 @@ const pool = require("./db");
 app.use(cors());
 app.use(express.json());
 
-//ROUTES//
+//PLANT ROUTES//
 
 //create plant
 app.post("/plants", async (req, res) => {
@@ -71,6 +71,51 @@ app.delete("/plants/:id", async (req, res) => {
       [id]
     );
     res.json("the plant was deleted with succes !");
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//WATERING ROUTES//
+
+//create a watering
+app.post("/waterings", async (req, res) => {
+  try {
+    const { hour } = req.body;
+    const newWatering = await pool.query(
+      "INSERT INTO watering (hour) VALUES ($1) RETURNING *",
+      [hour]
+    );
+    res.json(newWatering.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+//get a watering
+app.get("/waterings/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const watering = await pool.query(
+      "SELECT * FROM watering WHERE hour_id = $1",
+      [id]
+    );
+    res.json(watering.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// update a watering
+app.put("/waterings/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { hour } = req.body;
+    const updateWatering = await pool.query(
+      "UPDATE watering SET hour = $1 WHERE hour_id = $2",
+      [hour, id]
+    );
+    res.json("the watering was updated with success !");
   } catch (error) {
     console.error(error.message);
   }
